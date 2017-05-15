@@ -17,10 +17,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.dartmouth.cs.ifit.DB.CollectionEntryDbHelper;
 import com.dartmouth.cs.ifit.DB.CollectionInfoDAO;
-import com.dartmouth.cs.ifit.DB.TimelineEntryDbHelper;
-import com.dartmouth.cs.ifit.DB.TimelineInfoDAO;
 import com.dartmouth.cs.ifit.Model.CollectionEntry;
 
 import java.util.ArrayList;
@@ -44,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Get Data From DB
         datasource = new CollectionInfoDAO(this);
+        datasource.open();
 
         AsyncTaskLoad loadFromDB = new AsyncTaskLoad();
         loadFromDB.execute();
@@ -171,4 +169,23 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    protected void onResume() {
+        datasource.open();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        datasource.close();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        datasource.close();
+        super.onDestroy();
+    }
+
 }

@@ -8,7 +8,7 @@ import java.util.Calendar;
 
 public class TimelineEntry {
     private long id;
-    private long groudId;
+    private long groupId;
     private String collectionName;
     private Integer isRemind;
     private String remindText;
@@ -26,11 +26,11 @@ public class TimelineEntry {
     }
 
     public long getGroudId() {
-        return groudId;
+        return groupId;
     }
 
     public void setGroudId(long groudId) {
-        this.groudId = groudId;
+        this.groupId = groudId;
     }
 
     public String getCollectionName() {

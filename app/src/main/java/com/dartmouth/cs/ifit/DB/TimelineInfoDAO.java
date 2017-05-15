@@ -18,28 +18,27 @@ import java.util.GregorianCalendar;
 public class TimelineInfoDAO {
     // Database fields
     private SQLiteDatabase db;
-    private TimelineEntryDbHelper dbHelper;
+    private DBHelper dbHelper;
     private String[] allColumns = {
-            TimelineEntryDbHelper.KEY_ROWID,
-            TimelineEntryDbHelper.KEY_GROUP_ID,
-            TimelineEntryDbHelper.KEY_COLLECTION_NAME,
-            TimelineEntryDbHelper.KEY_IS_REMIND,
-            TimelineEntryDbHelper.KEY_REMIND_TEXT,
-            TimelineEntryDbHelper.KEY_PHOTO,
-            TimelineEntryDbHelper.KEY_WEIGHT,
-            TimelineEntryDbHelper.KEY_BODY_FAT_RATE,
-            TimelineEntryDbHelper.KEY_DATE_TIME
+            DBHelper.KEY_ROWID,
+            DBHelper.KEY_GROUP_ID,
+            DBHelper.KEY_COLLECTION_NAME,
+            DBHelper.KEY_IS_REMIND,
+            DBHelper.KEY_REMIND_TEXT,
+            DBHelper.KEY_PHOTO,
+            DBHelper.KEY_WEIGHT,
+            DBHelper.KEY_BODY_FAT_RATE,
+            DBHelper.KEY_DATE_TIME
     };
 
-    private static final String TAG = "DB";
-
     public TimelineInfoDAO(Context context) {
-        dbHelper = new TimelineEntryDbHelper(context);
+        dbHelper = new DBHelper(context);
     }
 
     public void open() {
         try {
             db = dbHelper.getWritableDatabase();
+            System.out.println("~~~");
         } catch (Exception ex){
             ex.printStackTrace();
         }
@@ -52,29 +51,25 @@ public class TimelineInfoDAO {
 
     // Insert a item given each column value
     public TimelineEntry insertEntry(TimelineEntry entry) {
-        open();
         ContentValues values = new ContentValues();
-        values.put(TimelineEntryDbHelper.KEY_GROUP_ID, entry.getGroudId());
-        values.put(TimelineEntryDbHelper.KEY_COLLECTION_NAME, entry.getCollectionName());
-        values.put(TimelineEntryDbHelper.KEY_IS_REMIND, entry.getRemind());
-        values.put(TimelineEntryDbHelper.KEY_REMIND_TEXT, entry.getRemindText());
-        values.put(TimelineEntryDbHelper.KEY_PHOTO, entry.getPhoto());
-        values.put(TimelineEntryDbHelper.KEY_WEIGHT, entry.getWeight());
-        values.put(TimelineEntryDbHelper.KEY_BODY_FAT_RATE, entry.getBodyFatRate());
-        values.put(TimelineEntryDbHelper.KEY_DATE_TIME, entry.getDateTime().getTimeInMillis());
+        values.put(DBHelper.KEY_GROUP_ID, entry.getGroudId());
+        values.put(DBHelper.KEY_COLLECTION_NAME, entry.getCollectionName());
+        values.put(DBHelper.KEY_IS_REMIND, entry.getRemind());
+        values.put(DBHelper.KEY_REMIND_TEXT, entry.getRemindText());
+        values.put(DBHelper.KEY_PHOTO, entry.getPhoto());
+        values.put(DBHelper.KEY_WEIGHT, entry.getWeight());
+        values.put(DBHelper.KEY_BODY_FAT_RATE, entry.getBodyFatRate());
+        values.put(DBHelper.KEY_DATE_TIME, entry.getDateTime().getTimeInMillis());
 
-        long id = db.insert(TimelineEntryDbHelper.TABLE_TIMELINE, null, values);
+        long id = db.insert(DBHelper.TABLE_TIMELINE, null, values);
         entry.setId(id);
 
-        close();
         return entry;
     }
 
     // Remove an entry by giving its index
     public void removeEntry(long id) {
-        open();
-        db.delete(TimelineEntryDbHelper.TABLE_TIMELINE, TimelineEntryDbHelper.KEY_ROWID + " = " + id, null);
-        close();
+        db.delete(DBHelper.TABLE_TIMELINE, DBHelper.KEY_ROWID + " = " + id, null);
     }
 
     // Query the entire table, return all rows
@@ -82,7 +77,7 @@ public class TimelineInfoDAO {
         open();
         ArrayList<TimelineEntry> entries = new ArrayList<>();
 
-        Cursor cursor = db.query(TimelineEntryDbHelper.TABLE_TIMELINE, allColumns, "groupid=?",
+        Cursor cursor = db.query(DBHelper.TABLE_TIMELINE, allColumns, "groupid=?",
                 new String[]{String.valueOf(groupId)}, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {

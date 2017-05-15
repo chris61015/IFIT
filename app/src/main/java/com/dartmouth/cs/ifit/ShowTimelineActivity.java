@@ -25,6 +25,7 @@ public class ShowTimelineActivity extends AppCompatActivity implements TimeLineA
     public static String TIMELINE = "timeline";
     private TimelineInfoDAO datasource;
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_timeline);
@@ -34,6 +35,7 @@ public class ShowTimelineActivity extends AppCompatActivity implements TimeLineA
 
         //Get Data From DB
         datasource = new TimelineInfoDAO(this);
+        datasource.open();
 
         AsyncTaskLoad loadFromDB = new AsyncTaskLoad();
         loadFromDB.execute(groupId);
@@ -93,4 +95,23 @@ public class ShowTimelineActivity extends AppCompatActivity implements TimeLineA
         }
 
     }
+
+    @Override
+    protected void onResume() {
+        datasource.open();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        datasource.close();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        datasource.close();
+        super.onDestroy();
+    }
+
 }

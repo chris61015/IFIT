@@ -15,16 +15,14 @@ import java.util.ArrayList;
 public class CollectionInfoDAO {
     // Database fields
     private SQLiteDatabase db;
-    private CollectionEntryDbHelper dbHelper;
+    private DBHelper dbHelper;
     private String[] allColumns = {
-            CollectionEntryDbHelper.KEY_ROWID,
-            CollectionEntryDbHelper.KEY_COLLECTION_NAME
+            DBHelper.KEY_ROWID,
+            DBHelper.KEY_COLLECTION_NAME
     };
 
-    private static final String TAG = "DB";
-
     public CollectionInfoDAO(Context context) {
-        dbHelper = new CollectionEntryDbHelper(context);
+        dbHelper = new DBHelper(context);
     }
 
     public void open() {
@@ -42,29 +40,23 @@ public class CollectionInfoDAO {
 
     // Insert a item given each column value
     public CollectionEntry insertEntry(CollectionEntry entry) {
-        open();
         ContentValues values = new ContentValues();
-        values.put(CollectionEntryDbHelper.KEY_COLLECTION_NAME, entry.getCollectionName());
+        values.put(DBHelper.KEY_COLLECTION_NAME, entry.getCollectionName());
 
-        long id = db.insert(CollectionEntryDbHelper.TABLE_COLLECTION, null, values);
+        long id = db.insert(DBHelper.TABLE_COLLECTION, null, values);
         entry.setId(id);
-        close();
         return entry;
     }
 
     // Remove an entry by giving its index
     public void removeEntry(long id) {
-        open();
-        db.delete(CollectionEntryDbHelper.TABLE_COLLECTION, CollectionEntryDbHelper.KEY_ROWID + " = " + id, null);
-        close();
+        db.delete(DBHelper.TABLE_COLLECTION, DBHelper.KEY_ROWID + " = " + id, null);
     }
 
     public void updateEntryName(CollectionEntry entry) {
-        open();
         ContentValues values = new ContentValues();
-        values.put(CollectionEntryDbHelper.KEY_COLLECTION_NAME, entry.getCollectionName());
-        db.update(CollectionEntryDbHelper.TABLE_COLLECTION, values, CollectionEntryDbHelper.KEY_ROWID + " = " + entry.getId(), null);
-        close();
+        values.put(DBHelper.KEY_COLLECTION_NAME, entry.getCollectionName());
+        db.update(DBHelper.TABLE_COLLECTION, values, DBHelper.KEY_ROWID + " = " + entry.getId(), null);
     }
 
     // Query the entire table, return all rows
@@ -72,7 +64,7 @@ public class CollectionInfoDAO {
         open();
         ArrayList<CollectionEntry> entries = new ArrayList<>();
 
-        Cursor cursor = db.query(CollectionEntryDbHelper.TABLE_COLLECTION, allColumns, null, null, null, null, null);
+        Cursor cursor = db.query(DBHelper.TABLE_COLLECTION, allColumns, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             CollectionEntry entry = new CollectionEntry();
