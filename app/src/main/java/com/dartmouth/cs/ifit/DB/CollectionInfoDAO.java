@@ -42,18 +42,29 @@ public class CollectionInfoDAO {
 
     // Insert a item given each column value
     public CollectionEntry insertEntry(CollectionEntry entry) {
+        open();
         ContentValues values = new ContentValues();
         values.put(CollectionEntryDbHelper.KEY_COLLECTION_NAME, entry.getCollectionName());
 
         long id = db.insert(CollectionEntryDbHelper.TABLE_COLLECTION, null, values);
         entry.setId(id);
-
+        close();
         return entry;
     }
 
     // Remove an entry by giving its index
     public void removeEntry(long id) {
+        open();
         db.delete(CollectionEntryDbHelper.TABLE_COLLECTION, CollectionEntryDbHelper.KEY_ROWID + " = " + id, null);
+        close();
+    }
+
+    public void updateEntryName(CollectionEntry entry) {
+        open();
+        ContentValues values = new ContentValues();
+        values.put(CollectionEntryDbHelper.KEY_COLLECTION_NAME, entry.getCollectionName());
+        db.update(CollectionEntryDbHelper.TABLE_COLLECTION, values, CollectionEntryDbHelper.KEY_ROWID + " = " + entry.getId(), null);
+        close();
     }
 
     // Query the entire table, return all rows

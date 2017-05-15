@@ -52,6 +52,7 @@ public class TimelineInfoDAO {
 
     // Insert a item given each column value
     public TimelineEntry insertEntry(TimelineEntry entry) {
+        open();
         ContentValues values = new ContentValues();
         values.put(TimelineEntryDbHelper.KEY_GROUP_ID, entry.getGroudId());
         values.put(TimelineEntryDbHelper.KEY_COLLECTION_NAME, entry.getCollectionName());
@@ -65,12 +66,15 @@ public class TimelineInfoDAO {
         long id = db.insert(TimelineEntryDbHelper.TABLE_TIMELINE, null, values);
         entry.setId(id);
 
+        close();
         return entry;
     }
 
     // Remove an entry by giving its index
     public void removeEntry(long id) {
+        open();
         db.delete(TimelineEntryDbHelper.TABLE_TIMELINE, TimelineEntryDbHelper.KEY_ROWID + " = " + id, null);
+        close();
     }
 
     // Query the entire table, return all rows

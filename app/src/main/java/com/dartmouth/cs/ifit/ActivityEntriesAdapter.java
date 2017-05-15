@@ -47,6 +47,7 @@ public class ActivityEntriesAdapter extends ArrayAdapter {
 
         CollectionEntry entry = mEntryList.get(position);
         nameView.setText(entry.getCollectionName());
+        nameView.setHeight(120);
 
         return view;
     }
@@ -56,8 +57,13 @@ public class ActivityEntriesAdapter extends ArrayAdapter {
         notifyDataSetChanged();
     }
 
-    public void remove(int pos){
+    public void removeEntry(int pos){
         mEntryList.remove(pos);
+        notifyDataSetChanged();
+    }
+
+    public void changeEntryName(int pos, String newName) {
+        mEntryList.get(pos).setCollectionName(newName);
         notifyDataSetChanged();
     }
 
