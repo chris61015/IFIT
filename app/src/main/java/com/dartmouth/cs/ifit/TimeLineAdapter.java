@@ -1,10 +1,7 @@
 package com.dartmouth.cs.ifit;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +11,6 @@ import com.github.vipulasri.timelineview.TimelineView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,21 +56,19 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> im
         TimelineEntry entry = mFeedList.get(position);
 
         //decode photo and put it onto timeline
-        Bitmap decodedByte;
-        if (entry.photo == null){
-            holder.mImgView.setImageResource(R.drawable.dartmouthpine);
-        } else {
-            byte[] decodedString = Base64.decode(entry.photo.replace(' ','+'), Base64.DEFAULT);
-            decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            holder.mImgView.setImageBitmap(decodedByte);
-        }
+//        Bitmap decodedByte;
+//        if (entry.getPhoto() != null){
+//            byte[] decodedString = Base64.decode(entry.getPhoto().replace(' ','+'), Base64.DEFAULT);
+//            decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+//            holder.mImgView.setImageBitmap(decodedByte);
+//        }
 
         SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String time = formatTime.format(new Date(entry.dateTime));
+//        String time = formatTime.format(new Date(entry.getDateTime()));
 
-        holder.mName.setText(entry.name);
-        holder.mDate.setText(time);
-        holder.mComment.setText(entry.comment);
+        holder.mName.setText("Test");
+        holder.mDate.setText("Time");
+        holder.mComment.setText("Comment");
 
         //store the data into the tag of itemview, so we could retrieve it on click
         holder.itemView.setTag(entry);

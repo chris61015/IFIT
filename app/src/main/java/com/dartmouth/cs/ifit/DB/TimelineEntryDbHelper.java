@@ -14,6 +14,7 @@ import static com.dartmouth.cs.ifit.DB.CollectionEntryDbHelper.TABLE_COLLECTION;
 public class TimelineEntryDbHelper extends SQLiteOpenHelper {
     public static final String TABLE_TIMELINE = "timelineinfo";
     public static final String KEY_ROWID = "_id";
+    public static final String KEY_GROUP_ID = "groupid";
     public static final String KEY_COLLECTION_NAME = "collectionname";
     public static final String KEY_IS_REMIND = "isremind";
     public static final String KEY_REMIND_TEXT = "remindtext";
@@ -32,6 +33,8 @@ public class TimelineEntryDbHelper extends SQLiteOpenHelper {
             + " ("
             + KEY_ROWID
             + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + KEY_GROUP_ID
+            + " INTEGER, "
             + KEY_COLLECTION_NAME
             + " TEXT, "
             + KEY_IS_REMIND

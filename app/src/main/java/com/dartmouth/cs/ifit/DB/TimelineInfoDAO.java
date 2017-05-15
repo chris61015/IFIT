@@ -21,6 +21,7 @@ public class TimelineInfoDAO {
     private TimelineEntryDbHelper dbHelper;
     private String[] allColumns = {
             TimelineEntryDbHelper.KEY_ROWID,
+            TimelineEntryDbHelper.KEY_GROUP_ID,
             TimelineEntryDbHelper.KEY_COLLECTION_NAME,
             TimelineEntryDbHelper.KEY_IS_REMIND,
             TimelineEntryDbHelper.KEY_REMIND_TEXT,
@@ -52,6 +53,7 @@ public class TimelineInfoDAO {
     // Insert a item given each column value
     public TimelineEntry insertEntry(TimelineEntry entry) {
         ContentValues values = new ContentValues();
+        values.put(TimelineEntryDbHelper.KEY_GROUP_ID, entry.getGroudId());
         values.put(TimelineEntryDbHelper.KEY_COLLECTION_NAME, entry.getCollectionName());
         values.put(TimelineEntryDbHelper.KEY_IS_REMIND, entry.getRemind());
         values.put(TimelineEntryDbHelper.KEY_REMIND_TEXT, entry.getRemindText());
@@ -72,25 +74,27 @@ public class TimelineInfoDAO {
     }
 
     // Query the entire table, return all rows
-    public synchronized ArrayList<TimelineEntry> fetchEntryById(long id) {
+    public synchronized ArrayList<TimelineEntry> fetchEntryByGroupId(long groupId) {
         open();
-        ArrayList<TimelineEntry> entries = new ArrayList<TimelineEntry>();
+        ArrayList<TimelineEntry> entries = new ArrayList<>();
 
-        Cursor cursor = db.query(TimelineEntryDbHelper.TABLE_TIMELINE, allColumns, null, null, null, null, null);
+        Cursor cursor = db.query(TimelineEntryDbHelper.TABLE_TIMELINE, allColumns, "groupid=?",
+                new String[]{String.valueOf(groupId)}, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             TimelineEntry entry = new TimelineEntry();
             entry.setId(cursor.getLong(0));
-            entry.setCollectionName(cursor.getString(1));
-            entry.setRemind(cursor.getInt(2));
-            entry.setRemindText(cursor.getString(3));
-            entry.setPhoto(cursor.getBlob(4));
-            entry.setWeight(cursor.getFloat(5));
-            entry.setBodyFatRate(cursor.getFloat(6));
+            entry.setGroudId(cursor.getLong(1));
+            entry.setCollectionName(cursor.getString(2));
+            entry.setRemind(cursor.getInt(3));
+            entry.setRemindText(cursor.getString(4));
+            entry.setPhoto(cursor.getBlob(5));
+            entry.setWeight(cursor.getFloat(6));
+            entry.setBodyFatRate(cursor.getFloat(7));
 
             // Calendar
             Calendar calendar= GregorianCalendar.getInstance();
-            calendar.setTimeInMillis(cursor.getLong(7));
+            calendar.setTimeInMillis(cursor.getLong(8));
             entry.setDateTime(calendar);
 
 
