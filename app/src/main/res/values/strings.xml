@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">IFIT</string>
     <string name="action_settings">Settings</string>
+
+    <string name="ui_timeline_button_add_photo">Photo</string>
+    <string name="ui_timeline_button_add_reminder">Reminder</string>
 </resources>
