@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.dartmouth.cs.ifit.Model.CollectionEntry;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +34,7 @@ public class ActivityEntriesAdapter extends ArrayAdapter {
     public ActivityEntriesAdapter(Context context, int resource, List objects) {
         super(context, resource, objects);
         mContext = context;
+        mEntryList = new ArrayList<>();
     }
 
     @Override
