@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 
 import com.dartmouth.cs.ifit.DB.TimelineInfoDAO;
+import com.dartmouth.cs.ifit.Model.CollectionEntry;
 import com.dartmouth.cs.ifit.Model.TimelineEntry;
 import com.dartmouth.cs.ifit.Notification.NotificationPublisher;
 
@@ -39,7 +40,10 @@ public class ShowTimelineActivity extends AppCompatActivity implements TimeLineA
     private RecyclerView mRecyclerView;
     private TimeLineAdapter mTimeLineAdapter;
     private static List<TimelineEntry> mDataList = new ArrayList<>();
-    public static String TIMELINE = "timeline";
+
+    public static String TIMELINE_ID = "timeline_id";
+    public static String GROUP_ID = "group_id";
+
     private TimelineInfoDAO datasource;
 
     int mYear = -1, mMonth = -1, mDay = -1, mHour = -1, mMinute = -1;
@@ -68,12 +72,14 @@ public class ShowTimelineActivity extends AppCompatActivity implements TimeLineA
         final Button recordButton = (Button) findViewById(R.id.btnAddPhoto);
         recordButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Perform action on click
-                TimelineEntry entry = datasource.getEntryById(45);
-                if (entry != null) {
-                    cancelNotification(entry);
-                    datasource.removeEntry(entry.getId());
-                }
+                Intent intent = new Intent(getApplicationContext(), RecordActivity.class);
+                startActivity(intent);
+//                // Perform action on click
+//                TimelineEntry entry = datasource.getEntryById(45);
+//                if (entry != null) {
+//                    cancelNotification(entry);
+//                    datasource.removeEntry(entry.getId());
+//                }
             }
         });
 
@@ -181,14 +187,13 @@ public class ShowTimelineActivity extends AppCompatActivity implements TimeLineA
                         mMinute = minute;
 
                         final EditText remind = new EditText(ShowTimelineActivity.this);
-                        new AlertDialog.Builder(ShowTimelineActivity.this)
+                        AlertDialog dialog = new AlertDialog.Builder(ShowTimelineActivity.this)
                                 .setTitle("Add Reminder Note")
-                                .setView(remind)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                                     public void onClick(DialogInterface dialog, int whichButton) {
                                         remindText = remind.getText().toString();
-                                        if (mYear != -1 && mMonth != -1 && mDay != -1 && mHour != -1 && mMinute != -1 && remindText != null) {
+                                        if (mYear != -1 && mMonth != -1 && mDay != -1 && mHour != -1 && mMinute != -1) {
                                             TimelineEntry entry = new TimelineEntry();
                                             Calendar c = Calendar.getInstance();
                                             c.setTimeInMillis(System.currentTimeMillis());
@@ -208,8 +213,9 @@ public class ShowTimelineActivity extends AppCompatActivity implements TimeLineA
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
                                     }
-                                })
-                                .show();
+                                }).create();
+                        dialog.setView(remind, 60, 0, 60, 0);
+                        dialog.show();
                     }
                 }, mHour, mMinute, false);
         timePickerDialog.show();

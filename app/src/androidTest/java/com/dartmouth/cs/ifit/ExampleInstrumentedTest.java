@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 /**
  * Instrumentation test, which will execute on an Android device.
  *
- * @see <list_view_image href="http://d.android.com/tools/testing">Testing documentation</list_view_image>
+ * @see <icon href="http://d.android.com/tools/testing">Testing documentation</icon>
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {

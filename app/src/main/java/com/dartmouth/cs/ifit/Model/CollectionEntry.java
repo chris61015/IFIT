@@ -7,6 +7,15 @@ package com.dartmouth.cs.ifit.Model;
 public class CollectionEntry {
     private long id;
     private String collectionName;
+    private byte[] icon;
+
+    public byte[] getIcon() {
+        return icon;
+    }
+
+    public void setIcon(byte[] icon) {
+        this.icon = icon.clone();
+    }
 
     public long getId() {
         return id;

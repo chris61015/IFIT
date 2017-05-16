@@ -18,7 +18,8 @@ public class CollectionInfoDAO {
     private DBHelper dbHelper;
     private String[] allColumns = {
             DBHelper.KEY_ROWID,
-            DBHelper.KEY_COLLECTION_NAME
+            DBHelper.KEY_COLLECTION_NAME,
+            DBHelper.KEY_ICON
     };
 
     public CollectionInfoDAO(Context context) {
@@ -38,10 +39,13 @@ public class CollectionInfoDAO {
     }
 
 
-    // Insert list_view_image item given each column value
+    // Insert icon item given each column value
     public CollectionEntry insertEntry(CollectionEntry entry) {
+        if (!db.isOpen())
+            open();
         ContentValues values = new ContentValues();
         values.put(DBHelper.KEY_COLLECTION_NAME, entry.getCollectionName());
+        values.put(DBHelper.KEY_ICON, entry.getIcon());
 
         long id = db.insert(DBHelper.TABLE_COLLECTION, null, values);
         entry.setId(id);
@@ -50,12 +54,24 @@ public class CollectionInfoDAO {
 
     // Remove an entry by giving its index
     public void removeEntry(long id) {
+        if (!db.isOpen())
+            open();
         db.delete(DBHelper.TABLE_COLLECTION, DBHelper.KEY_ROWID + " = " + id, null);
     }
 
     public void updateEntryName(CollectionEntry entry) {
+        if (!db.isOpen())
+            open();
         ContentValues values = new ContentValues();
         values.put(DBHelper.KEY_COLLECTION_NAME, entry.getCollectionName());
+        db.update(DBHelper.TABLE_COLLECTION, values, DBHelper.KEY_ROWID + " = " + entry.getId(), null);
+    }
+
+    public void updateEntryIcon(CollectionEntry entry) {
+        if (!db.isOpen())
+            open();
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.KEY_ICON, entry.getIcon());
         db.update(DBHelper.TABLE_COLLECTION, values, DBHelper.KEY_ROWID + " = " + entry.getId(), null);
     }
 
@@ -70,6 +86,7 @@ public class CollectionInfoDAO {
             CollectionEntry entry = new CollectionEntry();
             entry.setId(cursor.getLong(0));
             entry.setCollectionName(cursor.getString(1));
+            entry.setIcon(cursor.getBlob(2));
 
             entries.add(entry);
             cursor.moveToNext();

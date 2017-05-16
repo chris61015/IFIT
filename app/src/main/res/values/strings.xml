@@ -4,4 +4,19 @@
 
     <string name="ui_timeline_button_add_photo">Record</string>
     <string name="ui_timeline_button_add_reminder">Reminder</string>
+
+        <string name="weight">Weight:    </string>
+        <string name="body_fat_rate">Body fat rate:        </string>
+        <string name="save">Save</string>
+        <string name="cancel">Cancel</string>
+        <string name="profile_photo">Profile Photo</string>
+        <string name="change">Change</string>
+
+        <string name="ok">OK</string>
+        <string name="duration">Duration</string>
+        <string name="distance">Distance</string>
+        <string name="calories">Calories</string>
+        <string name="heart_rate">Heart Rate</string>
+        <string name="comment">Comment</string>
+
 </resources>

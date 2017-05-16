@@ -13,6 +13,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TABLE_COLLECTION = "collectioninfo";
     public static final String KEY_ROWID = "_id";
     public static final String KEY_COLLECTION_NAME = "collectionname";
+    public static final String KEY_ICON = "icon";
 
 
     public static final String TABLE_TIMELINE = "timelineinfo";
@@ -34,7 +35,9 @@ public class DBHelper extends SQLiteOpenHelper {
             + KEY_ROWID
             + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + KEY_COLLECTION_NAME
-            + " TEXT"
+            + " TEXT, "
+            + KEY_ICON
+            + " BLOB "
             + ");";
 
 
@@ -46,8 +49,6 @@ public class DBHelper extends SQLiteOpenHelper {
             + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + KEY_GROUP_ID
             + " INTEGER, "
-            + KEY_COLLECTION_NAME
-            + " TEXT, "
             + KEY_IS_REMIND
             + " INTEGER NOT NULL, "
             + KEY_REMIND_TEXT
@@ -55,9 +56,9 @@ public class DBHelper extends SQLiteOpenHelper {
             + KEY_PHOTO
             + " BLOB, "
             + KEY_WEIGHT
-            + " FLOAT, "
+            + " TEXT, "
             + KEY_BODY_FAT_RATE
-            + " FLOAT, "
+            + " TEXT, "
             + KEY_DATE_TIME
             + " DATETIME NOT NULL"
             + ");";

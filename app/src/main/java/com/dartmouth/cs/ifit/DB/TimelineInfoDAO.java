@@ -22,7 +22,6 @@ public class TimelineInfoDAO {
     private String[] allColumns = {
             DBHelper.KEY_ROWID,
             DBHelper.KEY_GROUP_ID,
-            DBHelper.KEY_COLLECTION_NAME,
             DBHelper.KEY_IS_REMIND,
             DBHelper.KEY_REMIND_TEXT,
             DBHelper.KEY_PHOTO,
@@ -48,16 +47,17 @@ public class TimelineInfoDAO {
     }
 
 
-    // Insert list_view_image item given each column value
+    // Insert icon item given each column value
     public TimelineEntry insertEntry(TimelineEntry entry) {
+        if (!db.isOpen())
+            open();
         ContentValues values = new ContentValues();
         values.put(DBHelper.KEY_GROUP_ID, entry.getGroudId());
-        values.put(DBHelper.KEY_COLLECTION_NAME, entry.getCollectionName());
         values.put(DBHelper.KEY_IS_REMIND, entry.getRemind());
         values.put(DBHelper.KEY_REMIND_TEXT, entry.getRemindText());
         values.put(DBHelper.KEY_PHOTO, entry.getPhoto());
-        values.put(DBHelper.KEY_WEIGHT, entry.getWeight());
-        values.put(DBHelper.KEY_BODY_FAT_RATE, entry.getBodyFatRate());
+        values.put(DBHelper.KEY_WEIGHT, entry.getWeight() + "");
+        values.put(DBHelper.KEY_BODY_FAT_RATE, entry.getBodyFatRate() + "");
         values.put(DBHelper.KEY_DATE_TIME, entry.getDateTime().getTimeInMillis());
 
         long id = db.insert(DBHelper.TABLE_TIMELINE, null, values);
@@ -66,8 +66,26 @@ public class TimelineInfoDAO {
         return entry;
     }
 
+    public void updateEntry(TimelineEntry entry) {
+        if (!db.isOpen())
+            open();
+
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.KEY_GROUP_ID, entry.getGroudId());
+        values.put(DBHelper.KEY_IS_REMIND, entry.getRemind());
+        values.put(DBHelper.KEY_REMIND_TEXT, entry.getRemindText());
+        values.put(DBHelper.KEY_PHOTO, entry.getPhoto());
+        values.put(DBHelper.KEY_WEIGHT, entry.getWeight() + "");
+        values.put(DBHelper.KEY_BODY_FAT_RATE, entry.getBodyFatRate() + "");
+        values.put(DBHelper.KEY_DATE_TIME, entry.getDateTime().getTimeInMillis());
+
+        db.update(DBHelper.TABLE_TIMELINE, values, DBHelper.KEY_ROWID + " = " + entry.getId(), null);
+    }
+
     // Remove an entry by giving its index
     public void removeEntry(long id) {
+        if (!db.isOpen())
+            open();
         db.delete(DBHelper.TABLE_TIMELINE, DBHelper.KEY_ROWID + " = " + id, null);
     }
 
@@ -79,16 +97,15 @@ public class TimelineInfoDAO {
         if (!cursor.isAfterLast()) {
             entry.setId(cursor.getLong(0));
             entry.setGroudId(cursor.getLong(1));
-            entry.setCollectionName(cursor.getString(2));
-            entry.setRemind(cursor.getInt(3));
-            entry.setRemindText(cursor.getString(4));
-            entry.setPhoto(cursor.getBlob(5));
-            entry.setWeight(cursor.getFloat(6));
-            entry.setBodyFatRate(cursor.getFloat(7));
+            entry.setRemind(cursor.getInt(2));
+            entry.setRemindText(cursor.getString(3));
+            entry.setPhoto(cursor.getBlob(4));
+            entry.setWeight(Double.parseDouble(cursor.getString(5)));
+            entry.setBodyFatRate(Double.parseDouble(cursor.getString(6)));
 
             // Calendar
             Calendar calendar= GregorianCalendar.getInstance();
-            calendar.setTimeInMillis(cursor.getLong(8));
+            calendar.setTimeInMillis(cursor.getLong(7));
             entry.setDateTime(calendar);
 
             cursor.moveToNext();
@@ -112,16 +129,15 @@ public class TimelineInfoDAO {
             TimelineEntry entry = new TimelineEntry();
             entry.setId(cursor.getLong(0));
             entry.setGroudId(cursor.getLong(1));
-            entry.setCollectionName(cursor.getString(2));
-            entry.setRemind(cursor.getInt(3));
-            entry.setRemindText(cursor.getString(4));
-            entry.setPhoto(cursor.getBlob(5));
-            entry.setWeight(cursor.getFloat(6));
-            entry.setBodyFatRate(cursor.getFloat(7));
+            entry.setRemind(cursor.getInt(2));
+            entry.setRemindText(cursor.getString(3));
+            entry.setPhoto(cursor.getBlob(4));
+            entry.setWeight(Double.parseDouble(cursor.getString(5)));
+            entry.setBodyFatRate(Double.parseDouble(cursor.getString(6)));
 
             // Calendar
             Calendar calendar= GregorianCalendar.getInstance();
-            calendar.setTimeInMillis(cursor.getLong(8));
+            calendar.setTimeInMillis(cursor.getLong(7));
             entry.setDateTime(calendar);
 
             entries.add(entry);

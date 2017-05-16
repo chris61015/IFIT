@@ -1,5 +1,6 @@
 package com.dartmouth.cs.ifit.Model;
 
+import java.sql.Time;
 import java.util.Calendar;
 
 /**
@@ -13,9 +14,15 @@ public class TimelineEntry {
     private Integer isRemind;
     private String remindText;
     private byte[] photo;
-    private Float weight;
-    private Float bodyFatRate;
+    private double weight;
+    private double bodyFatRate;
     private Calendar dateTime;
+
+    public TimelineEntry() {
+        id = -1;
+        groupId = -1;
+        isRemind = 0;
+    }
 
     public long getId() {
         return id;
@@ -62,22 +69,22 @@ public class TimelineEntry {
     }
 
     public void setPhoto(byte[] photo) {
-        this.photo = photo;
+        this.photo = photo.clone();
     }
 
-    public Float getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
-    public void setWeight(Float weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 
-    public Float getBodyFatRate() {
+    public Double getBodyFatRate() {
         return bodyFatRate;
     }
 
-    public void setBodyFatRate(Float bodyFatRate) {
+    public void setBodyFatRate(double bodyFatRate) {
         this.bodyFatRate = bodyFatRate;
     }
 

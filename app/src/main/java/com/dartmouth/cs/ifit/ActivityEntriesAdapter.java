@@ -1,6 +1,8 @@
 package com.dartmouth.cs.ifit;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import com.dartmouth.cs.ifit.Model.CollectionEntry;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +53,10 @@ public class ActivityEntriesAdapter extends ArrayAdapter {
 
         CollectionEntry entry = mEntryList.get(position);
         txtTitle.setText(entry.getCollectionName());
-        imageView.setImageResource(R.drawable.list_view_image);
+
+        ByteArrayInputStream imageStream = new ByteArrayInputStream(entry.getIcon());
+        Bitmap theImage = BitmapFactory.decodeStream(imageStream);
+        imageView.setImageBitmap(theImage);
 
         return view;
     }
@@ -67,6 +73,21 @@ public class ActivityEntriesAdapter extends ArrayAdapter {
 
     public void changeEntryName(int pos, String newName) {
         mEntryList.get(pos).setCollectionName(newName);
+        notifyDataSetChanged();
+    }
+
+    public void changeEntryIcon(int pos, byte[] icon) {
+        mEntryList.get(pos).setIcon(icon);
+        notifyDataSetChanged();
+    }
+
+    public void changeEntryIcon(CollectionEntry entry, byte[] icon) {
+        for (CollectionEntry c : mEntryList) {
+            if (c.getId() == entry.getId()) {
+                c.setIcon(icon);
+                break;
+            }
+        }
         notifyDataSetChanged();
     }
 
