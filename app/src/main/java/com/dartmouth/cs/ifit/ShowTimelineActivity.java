@@ -3,20 +3,18 @@ package com.dartmouth.cs.ifit;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -24,15 +22,14 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.dartmouth.cs.ifit.DB.TimelineInfoDAO;
 import com.dartmouth.cs.ifit.Model.TimelineEntry;
+import com.dartmouth.cs.ifit.Notification.NotificationPublisher;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Created by chris61015 on 5/14/17.
@@ -67,6 +64,18 @@ public class ShowTimelineActivity extends AppCompatActivity implements TimeLineA
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(getLinearLayoutManager());
         mRecyclerView.setHasFixedSize(true);
+
+        final Button recordButton = (Button) findViewById(R.id.btnAddPhoto);
+        recordButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                TimelineEntry entry = datasource.getEntryById(45);
+                if (entry != null) {
+                    cancelNotification(entry);
+                    datasource.removeEntry(entry.getId());
+                }
+            }
+        });
 
         final Button reminderButton = (Button) findViewById(R.id.btnAddReminder);
         reminderButton.setOnClickListener(new View.OnClickListener() {
@@ -180,7 +189,6 @@ public class ShowTimelineActivity extends AppCompatActivity implements TimeLineA
                                     public void onClick(DialogInterface dialog, int whichButton) {
                                         remindText = remind.getText().toString();
                                         if (mYear != -1 && mMonth != -1 && mDay != -1 && mHour != -1 && mMinute != -1 && remindText != null) {
-                                            System.out.println("1222222");
                                             TimelineEntry entry = new TimelineEntry();
                                             Calendar c = Calendar.getInstance();
                                             c.setTimeInMillis(System.currentTimeMillis());
@@ -215,13 +223,21 @@ public class ShowTimelineActivity extends AppCompatActivity implements TimeLineA
         builder.setSmallIcon(R.drawable.marker);
         Notification notification = builder.build();
 
-        Intent notificationIntent = new Intent(this, MyNotificationPublisher.class);
-        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION_ID, 1);
-        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, (int) entry.getId());
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) entry.getId(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, entry.getDateTime().getTimeInMillis(), pendingIntent);
+    }
+
+    private void cancelNotification(TimelineEntry entry) {
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        PendingIntent pi = PendingIntent.getBroadcast(this, (int) entry.getId(), notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pi);
     }
 
     @Override

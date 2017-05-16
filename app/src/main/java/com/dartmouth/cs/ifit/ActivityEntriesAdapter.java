@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -41,13 +42,15 @@ public class ActivityEntriesAdapter extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent){
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
-        View view = inflater.inflate(R.layout.collection_item, parent, false);
+        View view = inflater.inflate(R.layout.collection_item, null,true);
 
-        TextView nameView = (TextView) view.findViewById(R.id.col_name);
+
+        TextView txtTitle = (TextView) view.findViewById(R.id.Itemname);
+        ImageView imageView = (ImageView) view.findViewById(R.id.icon);
 
         CollectionEntry entry = mEntryList.get(position);
-        nameView.setText(entry.getCollectionName());
-        nameView.setHeight(120);
+        txtTitle.setText(entry.getCollectionName());
+        imageView.setImageResource(R.drawable.list_view_image);
 
         return view;
     }

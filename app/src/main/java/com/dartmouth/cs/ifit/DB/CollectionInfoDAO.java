@@ -38,7 +38,7 @@ public class CollectionInfoDAO {
     }
 
 
-    // Insert a item given each column value
+    // Insert list_view_image item given each column value
     public CollectionEntry insertEntry(CollectionEntry entry) {
         ContentValues values = new ContentValues();
         values.put(DBHelper.KEY_COLLECTION_NAME, entry.getCollectionName());

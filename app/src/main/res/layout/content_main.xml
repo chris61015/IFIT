@@ -11,6 +11,7 @@
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:dividerHeight="10dp"
         android:id="@+id/collection_list" />
 
 </android.support.constraint.ConstraintLayout>

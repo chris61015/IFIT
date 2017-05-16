@@ -38,7 +38,6 @@ public class TimelineInfoDAO {
     public void open() {
         try {
             db = dbHelper.getWritableDatabase();
-            System.out.println("~~~");
         } catch (Exception ex){
             ex.printStackTrace();
         }
@@ -49,7 +48,7 @@ public class TimelineInfoDAO {
     }
 
 
-    // Insert a item given each column value
+    // Insert list_view_image item given each column value
     public TimelineEntry insertEntry(TimelineEntry entry) {
         ContentValues values = new ContentValues();
         values.put(DBHelper.KEY_GROUP_ID, entry.getGroudId());
@@ -70,6 +69,35 @@ public class TimelineInfoDAO {
     // Remove an entry by giving its index
     public void removeEntry(long id) {
         db.delete(DBHelper.TABLE_TIMELINE, DBHelper.KEY_ROWID + " = " + id, null);
+    }
+
+    public TimelineEntry getEntryById(long id) {
+        Cursor cursor = db.query(DBHelper.TABLE_TIMELINE, allColumns, "_id=?",
+                new String[]{String.valueOf(id)}, null, null, null);
+        cursor.moveToFirst();
+        TimelineEntry entry = new TimelineEntry();
+        if (!cursor.isAfterLast()) {
+            entry.setId(cursor.getLong(0));
+            entry.setGroudId(cursor.getLong(1));
+            entry.setCollectionName(cursor.getString(2));
+            entry.setRemind(cursor.getInt(3));
+            entry.setRemindText(cursor.getString(4));
+            entry.setPhoto(cursor.getBlob(5));
+            entry.setWeight(cursor.getFloat(6));
+            entry.setBodyFatRate(cursor.getFloat(7));
+
+            // Calendar
+            Calendar calendar= GregorianCalendar.getInstance();
+            calendar.setTimeInMillis(cursor.getLong(8));
+            entry.setDateTime(calendar);
+
+            cursor.moveToNext();
+        }
+        else
+            entry = null;
+        // Make sure to close the cursor
+        cursor.close();
+        return entry;
     }
 
     // Query the entire table, return all rows
@@ -95,7 +123,6 @@ public class TimelineInfoDAO {
             Calendar calendar= GregorianCalendar.getInstance();
             calendar.setTimeInMillis(cursor.getLong(8));
             entry.setDateTime(calendar);
-
 
             entries.add(entry);
             cursor.moveToNext();

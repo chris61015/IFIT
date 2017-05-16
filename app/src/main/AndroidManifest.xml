@@ -12,7 +12,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ShowTimelineActivity" />
         <activity
             android:name=".SplashActivity"
@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.dartmouth.cs.ifit.MyNotificationPublisher" />
+        <receiver android:name=".Notification.NotificationPublisher" />
     </application>
 
 </manifest>

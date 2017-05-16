@@ -1,4 +1,4 @@
-package com.dartmouth.cs.ifit;
+package com.dartmouth.cs.ifit.Notification;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MyNotificationPublisher extends BroadcastReceiver {
+public class NotificationPublisher extends BroadcastReceiver {
 
     public static String NOTIFICATION_ID = "notification_id";
     public static String NOTIFICATION = "notification";
