@@ -1,9 +1,8 @@
-package com.dartmouth.cs.ifit;
+package com.dartmouth.cs.ifit.activity;
 
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -13,10 +12,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -24,9 +22,10 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 
 import com.dartmouth.cs.ifit.DB.TimelineInfoDAO;
-import com.dartmouth.cs.ifit.Model.CollectionEntry;
-import com.dartmouth.cs.ifit.Model.TimelineEntry;
-import com.dartmouth.cs.ifit.Notification.NotificationPublisher;
+import com.dartmouth.cs.ifit.R;
+import com.dartmouth.cs.ifit.SlidingTabsBasicFragment;
+import com.dartmouth.cs.ifit.model.TimelineEntry;
+import com.dartmouth.cs.ifit.notification.NotificationPublisher;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,13 +35,11 @@ import java.util.List;
  * Created by chris61015 on 5/14/17.
  */
 
-public class ShowTimelineActivity extends AppCompatActivity implements TimeLineAdapter.OnRecyclerViewItemClickListener{
-    private RecyclerView mRecyclerView;
-    private TimeLineAdapter mTimeLineAdapter;
+public class ShowTimelineActivity extends AppCompatActivity {
     private static List<TimelineEntry> mDataList = new ArrayList<>();
 
     public static String TIMELINE_ID = "timeline_id";
-    public static String GROUP_ID = "group_id";
+    public static final String GROUP_ID = "group_id";
 
     private TimelineInfoDAO datasource;
 
@@ -53,9 +50,10 @@ public class ShowTimelineActivity extends AppCompatActivity implements TimeLineA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_timeline);
+
         //Fetch Data
         Intent intent = getIntent();
-        Long groupId = intent.getLongExtra(MainActivity.ID,0L);
+        final Long groupId = intent.getLongExtra(GROUP_ID,0L);
 
         //Get Data From DB
         datasource = new TimelineInfoDAO(this);
@@ -64,15 +62,15 @@ public class ShowTimelineActivity extends AppCompatActivity implements TimeLineA
         AsyncTaskLoad loadFromDB = new AsyncTaskLoad();
         loadFromDB.execute(groupId);
 
-        //Timeline view
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(getLinearLayoutManager());
-        mRecyclerView.setHasFixedSize(true);
-
         final Button recordButton = (Button) findViewById(R.id.btnAddPhoto);
         recordButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), RecordActivity.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putLong(ShowTimelineActivity.GROUP_ID, groupId);
+                intent.putExtras(bundle);
+
                 startActivity(intent);
 //                // Perform action on click
 //                TimelineEntry entry = datasource.getEntryById(45);
@@ -97,51 +95,23 @@ public class ShowTimelineActivity extends AppCompatActivity implements TimeLineA
                 datePicker();
             }
         });
-        initView();
+
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            SlidingTabsBasicFragment fragment = new SlidingTabsBasicFragment();
+            fragment.setData(mDataList);
+            transaction.replace(R.id.sample_content_fragment, fragment);
+            transaction.commit();
+        }
     }
-
-    private LinearLayoutManager getLinearLayoutManager() {
-        return new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-    }
-
-    private void initView() {
-        mTimeLineAdapter = new TimeLineAdapter();
-        mTimeLineAdapter.addAll(mDataList);
-        mTimeLineAdapter.setOnItemClickListener(this);
-        mRecyclerView.setAdapter(mTimeLineAdapter);
-    }
-
-//    private void setDataListItems() {
-//        Intent intent = getIntent();
-//        long TreeId = intent.getLongExtra(TREEID, 0);
-//    }
-
-    @Override
-    public void onItemClick(View view, TimelineEntry entry) {
-
-//        Intent intent = new Intent(this, UpdateDetailsActivity.class);
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelable(TIMELINE, entry);
-//
-//        intent.putExtras(bundle);
-//
-//        startActivity(intent);
-    }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar_timeline);
-//        setSupportActionBar(mActionBarToolbar);
-//        getSupportActionBar().setTitle("Timeline");
-//    }
 
     private class AsyncTaskLoad extends AsyncTask<Long, Void, Void>
     {
         @Override
         protected Void doInBackground(Long... params)
         {
-
+            List<TimelineEntry> temp= datasource.fetchEntries();
+            System.out.println(temp.get(0).getId());
             mDataList.addAll(datasource.fetchEntryByGroupId(params[0]));
             return null;
         }

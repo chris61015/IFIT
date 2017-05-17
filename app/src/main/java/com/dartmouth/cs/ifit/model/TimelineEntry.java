@@ -1,6 +1,5 @@
-package com.dartmouth.cs.ifit.Model;
+package com.dartmouth.cs.ifit.model;
 
-import java.sql.Time;
 import java.util.Calendar;
 
 /**

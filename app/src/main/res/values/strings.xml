@@ -19,4 +19,7 @@
         <string name="heart_rate">Heart Rate</string>
         <string name="comment">Comment</string>
 
+    <string name="ui_proile_image_descripton">Your Selfie Here!</string>
+
+
 </resources>

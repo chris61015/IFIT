@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import com.dartmouth.cs.ifit.Model.CollectionEntry;
+import com.dartmouth.cs.ifit.model.CollectionEntry;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;

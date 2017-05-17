@@ -1,4 +1,4 @@
-package com.dartmouth.cs.ifit;
+package com.dartmouth.cs.ifit.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,14 +19,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.dartmouth.cs.ifit.DB.TimelineInfoDAO;
-import com.dartmouth.cs.ifit.Model.TimelineEntry;
+import com.dartmouth.cs.ifit.R;
+import com.dartmouth.cs.ifit.model.TimelineEntry;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.GregorianCalendar;
+
+import static com.dartmouth.cs.ifit.R.id.imageView;
 
 
 public class RecordActivity extends Activity {
@@ -58,7 +61,7 @@ public class RecordActivity extends Activity {
         mETweight.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL|InputType.TYPE_CLASS_NUMBER);
         mETbfr.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL|InputType.TYPE_CLASS_NUMBER);
 
-        mIVimage = (ImageView) findViewById(R.id.imageView);
+        mIVimage = (ImageView) findViewById(imageView);
         mBSave = (Button) findViewById(R.id.button);
         mBChange = (Button) findViewById(R.id.button3);
         mBCancel = (Button) findViewById(R.id.button2);
@@ -123,13 +126,15 @@ public class RecordActivity extends Activity {
         if (bfr.length() == 0)
             bfr = "0";
 
+        saveImageToEntry();
         entry.setWeight(Double.parseDouble(weight));
         entry.setBodyFatRate(Double.parseDouble(bfr));
         entry.setDateTime(GregorianCalendar.getInstance());
-        if (entry.getId() != -1)
+        if (entry.getId() != -1){
             datasource.updateEntry(entry);
-        else
+        } else {
             datasource.insertEntry(entry);
+        }
     }
 
 
@@ -186,19 +191,25 @@ public class RecordActivity extends Activity {
             mCroppedImageUri = Crop.getOutput(result);
             mIVimage.setImageResource(0);
             mIVimage.setImageURI(mCroppedImageUri);
-
-            byte[] inputData = null;
-            try {
-                InputStream iStream = getContentResolver().openInputStream(mCroppedImageUri);
-                inputData = MainActivity.getBytes(iStream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (inputData != null) {
-                entry.setPhoto(inputData);
-            }
         }
+    }
+
+    private void saveImageToEntry(){
+//        byte[] inputData = null;
+//        try {
+//            Uri targetUri = (mCroppedImageUri==null)? mImageCapturedUri: mCroppedImageUri;
+//            InputStream iStream = getContentResolver().openInputStream(targetUri);
+//            inputData = MainActivity.getBytes(iStream);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        Bitmap bitmap = ((BitmapDrawable)mIVimage.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        entry.setPhoto(byteArray);
     }
 
     protected void onSaveInstanceState(Bundle savedInstanceState) {

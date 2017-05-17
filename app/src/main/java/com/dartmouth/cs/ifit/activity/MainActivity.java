@@ -1,4 +1,4 @@
-package com.dartmouth.cs.ifit;
+package com.dartmouth.cs.ifit.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -28,8 +28,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.dartmouth.cs.ifit.ActivityEntriesAdapter;
 import com.dartmouth.cs.ifit.DB.CollectionInfoDAO;
-import com.dartmouth.cs.ifit.Model.CollectionEntry;
+import com.dartmouth.cs.ifit.R;
+import com.dartmouth.cs.ifit.model.CollectionEntry;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.ByteArrayOutputStream;
@@ -38,15 +40,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityEntriesAdapter mEntryAdaptor;
     private List<CollectionEntry> values = new ArrayList<>();
-    private CollectionInfoDAO datasource;
-    public static final String ID = "ID";
+    private CollectionInfoDAO datasource;;
     private byte[] defaultIcon;
     private CollectionEntry currentSelectedEntry = null;
 
@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         verifyStoragePermissions(this);
+
         //Tool bar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 CollectionEntry entry = mEntryAdaptor.getItem(position);
 
                 Bundle bundle = new Bundle();
-                bundle.putLong(ID, entry.getId());
+                bundle.putLong(ShowTimelineActivity.GROUP_ID, entry.getId());
                 intent.putExtras(bundle);
 
                 startActivity(intent);

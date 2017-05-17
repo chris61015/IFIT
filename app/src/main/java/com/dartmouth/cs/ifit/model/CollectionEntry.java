@@ -1,4 +1,4 @@
-package com.dartmouth.cs.ifit.Model;
+package com.dartmouth.cs.ifit.model;
 
 /**
  * Created by chris61015 on 5/14/17.

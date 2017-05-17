@@ -1,57 +1,88 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<!--
+  Copyright 2013 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.dartmouth.cs.ifit.ShowTimelineActivity">
+    android:id="@+id/sample_main_layout">
+
+    <ViewAnimator
+        android:id="@+id/sample_output"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1">
+
+        <ScrollView
+            style="@style/Widget.SampleMessageTile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:contentDescription="@string/ui_proile_image_descripton"
+                android:id="@+id/ImageProfile"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:layout_marginBottom="5dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true" >
+
+                <requestFocus />
+            </ImageView>
+        </ScrollView>
+
+    </ViewAnimator>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <FrameLayout
+        android:id="@+id/sample_content_fragment"
+        android:layout_weight="2"
+        android:layout_width="match_parent"
+        android:layout_height="0px" >
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <!--<android.support.v7.widget.Toolbar-->
-            <!--android:id="@+id/toolbar_timeline"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="@dimen/abc_action_bar_default_height_material"-->
-            <!--android:background="?attr/colorPrimary"-->
-            <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>-->
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" >
+        <Button
+            android:id="@+id/btnAddPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dp"
+            android:layout_weight="1"
+            android:onClick="onAddPhotoClicked"
+            android:text="@string/ui_timeline_button_add_photo" >
+        </Button>
 
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:clipToPadding="false"/>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp" >
-            <Button
-                android:id="@+id/btnAddPhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="30dp"
-                android:layout_weight="1"
-                android:onClick="onAddPhotoClicked"
-                android:text="@string/ui_timeline_button_add_photo" >
-            </Button>
-
-            <Button
-                android:id="@+id/btnAddReminder"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="30dp"
-                android:layout_weight="1"
-                android:text="@string/ui_timeline_button_add_reminder"
-                android:onClick="onAddReminderClicked">
-            </Button>
-        </LinearLayout>
+        <Button
+            android:id="@+id/btnAddReminder"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_weight="1"
+            android:text="@string/ui_timeline_button_add_reminder"
+            android:onClick="onAddReminderClicked">
+        </Button>
     </LinearLayout>
 
-
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

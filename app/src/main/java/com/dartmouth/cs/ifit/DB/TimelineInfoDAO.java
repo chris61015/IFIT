@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.dartmouth.cs.ifit.Model.TimelineEntry;
+import com.dartmouth.cs.ifit.model.TimelineEntry;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -124,6 +124,37 @@ public class TimelineInfoDAO {
 
         Cursor cursor = db.query(DBHelper.TABLE_TIMELINE, allColumns, "groupid=?",
                 new String[]{String.valueOf(groupId)}, null, null, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            TimelineEntry entry = new TimelineEntry();
+            entry.setId(cursor.getLong(0));
+            entry.setGroudId(cursor.getLong(1));
+            entry.setRemind(cursor.getInt(2));
+            entry.setRemindText(cursor.getString(3));
+            entry.setPhoto(cursor.getBlob(4));
+            entry.setWeight(Double.parseDouble(cursor.getString(5)));
+            entry.setBodyFatRate(Double.parseDouble(cursor.getString(6)));
+
+            // Calendar
+            Calendar calendar= GregorianCalendar.getInstance();
+            calendar.setTimeInMillis(cursor.getLong(7));
+            entry.setDateTime(calendar);
+
+            entries.add(entry);
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        close();
+        return entries;
+    }
+
+    // Query the entire table, return all rows
+    public  ArrayList<TimelineEntry> fetchEntries() {
+        open();
+        ArrayList<TimelineEntry> entries = new ArrayList<>();
+
+        Cursor cursor = db.query(DBHelper.TABLE_TIMELINE, allColumns, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             TimelineEntry entry = new TimelineEntry();

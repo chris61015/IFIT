@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.dartmouth.cs.ifit.Model.CollectionEntry;
+import com.dartmouth.cs.ifit.model.CollectionEntry;
 import java.util.ArrayList;
 
 
