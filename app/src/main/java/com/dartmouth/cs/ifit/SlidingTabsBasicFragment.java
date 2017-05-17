@@ -118,7 +118,7 @@ public class SlidingTabsBasicFragment extends Fragment {
          */
         @Override
         public CharSequence getPageTitle(int position) {
-            return "Item " + (position + 1);
+            return "Record " + (position + 1);
         }
         // END_INCLUDE (pageradapter_getpagetitle)
 
@@ -137,8 +137,7 @@ public class SlidingTabsBasicFragment extends Fragment {
             // Retrieve a TextView from the inflated View, and update its text
             TextView txtWeight = (TextView) view.findViewById(R.id.item_weight);
             TextView txtBodyFat = (TextView) view.findViewById(R.id.item_body_fat_rate);
-            ImageView imgView = (ImageView) view.findViewById(R.id.ImageProfile);
-
+            ImageView imgView = (ImageView) getActivity().findViewById(R.id.ImageProfile);
 
             Double weight = mDataList.get(position).getWeight();
             Double bodyfatrate = mDataList.get(position).getBodyFatRate();
@@ -170,7 +169,8 @@ public class SlidingTabsBasicFragment extends Fragment {
     public void setData(List<TimelineEntry> list) {
         mDataList.clear();
         mDataList.addAll(list);
-//        mAdaptor.notifyDataSetChanged();
+        if (mAdaptor != null)
+            mAdaptor.notifyDataSetChanged();
     }
 }
 

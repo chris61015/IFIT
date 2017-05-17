@@ -99,10 +99,12 @@ public class ShowTimelineActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             SlidingTabsBasicFragment fragment = new SlidingTabsBasicFragment();
-            fragment.setData(mDataList);
             transaction.replace(R.id.sample_content_fragment, fragment);
             transaction.commit();
+
+            fragment.setData(mDataList);
         }
+
     }
 
     private class AsyncTaskLoad extends AsyncTask<Long, Void, Void>
@@ -110,8 +112,6 @@ public class ShowTimelineActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Long... params)
         {
-            List<TimelineEntry> temp= datasource.fetchEntries();
-            System.out.println(temp.get(0).getId());
             mDataList.addAll(datasource.fetchEntryByGroupId(params[0]));
             return null;
         }
