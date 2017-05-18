@@ -22,11 +22,13 @@ import android.widget.TimePicker;
 
 import com.dartmouth.cs.ifit.DB.TimelineInfoDAO;
 import com.dartmouth.cs.ifit.R;
-import com.dartmouth.cs.ifit.SlidingTabsBasicFragment;
+import com.dartmouth.cs.ifit.fragment.SlidingTabsBasicFragment;
 import com.dartmouth.cs.ifit.model.TimelineEntry;
 import com.dartmouth.cs.ifit.notification.NotificationPublisher;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by chris61015 on 5/14/17.
@@ -40,7 +42,7 @@ public class ShowTimelineActivity extends AppCompatActivity {
     private TimelineInfoDAO datasource;
     private SlidingTabsBasicFragment mFragment = new SlidingTabsBasicFragment();
     private long G_ID;
-
+    private List<TimelineEntry> mList = new ArrayList<>();
     int mYear = -1, mMonth = -1, mDay = -1, mHour = -1, mMinute = -1;
     String remindText = null;
 
@@ -92,20 +94,51 @@ public class ShowTimelineActivity extends AppCompatActivity {
             }
         });
 
+        final Button deleteButton = (Button) findViewById(R.id.btnDelete);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                int pagePos = mFragment.getPageSelected();
+                TimelineEntry entry = mList.get(pagePos);
+                datasource.removeEntry(entry.getId());
+                mList.clear();
+                mList.addAll(datasource.fetchEntryByGroupId(G_ID));
+                mFragment.setData(mList);
+
+            }
+        });
+
+        final Button modifyButton = (Button) findViewById(R.id.btnModify);
+        modifyButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                int pagePos = mFragment.getPageSelected();
+                TimelineEntry entry = mList.get(pagePos);
+
+                Intent intent = new Intent(getApplicationContext(), RecordActivity.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putLong(ShowTimelineActivity.TIMELINE_ID, entry.getId());
+                intent.putExtras(bundle);
+
+                startActivityForResult(intent, 1);
+            }
+        });
+
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.sample_content_fragment, mFragment);
             transaction.commit();
         }
-        mFragment.setData(datasource.fetchEntryByGroupId(G_ID));
+        mList.addAll(datasource.fetchEntryByGroupId(G_ID));
+        mFragment.setData(mList);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mFragment.setData(datasource.fetchEntryByGroupId(G_ID));
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        transaction.replace(R.id.sample_content_fragment, mFragment);
-//        transaction.commit();
+        mList.clear();
+        mList.addAll(datasource.fetchEntryByGroupId(G_ID));
+        mFragment.setData(mList);
     }
 
 //    private class AsyncTaskLoad extends AsyncTask<Long, Void, Void>
@@ -176,6 +209,7 @@ public class ShowTimelineActivity extends AppCompatActivity {
                                             entry.setDateTime(c);
                                             entry.setRemind(1);
                                             entry.setRemindText(remindText);
+                                            entry.setGroudId(G_ID);
                                             datasource.insertEntry(entry);
                                             scheduleNotification(entry);
                                         }
@@ -234,5 +268,4 @@ public class ShowTimelineActivity extends AppCompatActivity {
         datasource.close();
         super.onDestroy();
     }
-
 }

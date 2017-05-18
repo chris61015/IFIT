@@ -35,9 +35,7 @@
             android:id="@+id/btnAddPhoto"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
-            android:layout_weight="1"
-            android:onClick="onAddPhotoClicked"
+            android:layout_marginLeft="10dp"
             android:text="@string/ui_timeline_button_add_photo" >
         </Button>
 
@@ -45,10 +43,24 @@
             android:id="@+id/btnAddReminder"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1"
-            android:text="@string/ui_timeline_button_add_reminder"
-            android:onClick="onAddReminderClicked">
+            android:layout_marginRight="5dp"
+            android:text="@string/ui_timeline_button_add_reminder">
+        </Button>
+
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:text="@string/ui_timeline_button_delete">
+        </Button>
+
+        <Button
+            android:id="@+id/btnModify"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:text="@string/ui_timeline_button_Modify">
         </Button>
     </LinearLayout>
 

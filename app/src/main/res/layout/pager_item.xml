@@ -15,7 +15,8 @@
         <ScrollView
             style="@style/Widget.SampleMessageTile"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/page_scrollview">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,15 +42,13 @@
 
     <ImageView
         android:contentDescription="@string/ui_proile_image_descripton"
-        android:id="@+id/ImageProfile"
+        android:id="@+id/page_imageview"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_weight="1"
         android:layout_margin="5dp"
         android:layout_marginBottom="5dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true" >
-
-        <requestFocus />
+        android:focusable="false"
+        android:focusableInTouchMode="false">
     </ImageView>
 </LinearLayout>

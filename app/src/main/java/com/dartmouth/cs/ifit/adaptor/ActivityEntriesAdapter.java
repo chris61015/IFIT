@@ -1,4 +1,4 @@
-package com.dartmouth.cs.ifit;
+package com.dartmouth.cs.ifit.adaptor;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.dartmouth.cs.ifit.R;
 import com.dartmouth.cs.ifit.model.CollectionEntry;
 
 import java.io.ByteArrayInputStream;

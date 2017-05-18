@@ -1,4 +1,4 @@
-package com.dartmouth.cs.ifit;
+package com.dartmouth.cs.ifit.adaptor;
 
 /**
  * Created by chris61015 on 5/17/17.
@@ -14,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dartmouth.cs.ifit.R;
 import com.dartmouth.cs.ifit.model.TimelineEntry;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,22 +80,38 @@ public class SamplePagerAdapter extends PagerAdapter {
         // Add the newly created View to the ViewPager
         container.addView(view);
 
-        // Retrieve a TextView from the inflated View, and update its text
         TextView txtWeight = (TextView) view.findViewById(R.id.item_weight);
         TextView txtBodyFat = (TextView) view.findViewById(R.id.item_body_fat_rate);
-        ImageView imgView = (ImageView) view.findViewById(R.id.ImageProfile);
+        ImageView imgView = (ImageView) view.findViewById(R.id.page_imageview);
 
-        Double weight = mDataList.get(position).getWeight();
-        Double bodyfatrate = mDataList.get(position).getBodyFatRate();
-        byte[] photo = mDataList.get(position).getPhoto();
+        TimelineEntry entry = mDataList.get(position);
 
-        StringBuilder sb = new StringBuilder();
-        txtWeight.setText(sb.append("Weight: ").append(weight).toString());
-        sb.setLength(0);
-        txtBodyFat.setText(sb.append("Body Fat Rate: ").append(bodyfatrate).toString());
+        if (entry.getRemind() == 1){
+            StringBuilder sb = new StringBuilder();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(photo, 0, photo.length);
-        imgView.setImageBitmap(decodedByte);
+            txtWeight.setText(sb.append("Remind Time: ").append(sdf.format(entry.getDateTime().getTimeInMillis())).toString());
+            sb.setLength(0);
+            txtBodyFat.setText(sb.append("Remind Text: ").append(entry.getRemindText()).toString());
+
+            imgView.setImageResource(R.drawable.icon);
+
+        } else {
+            // Retrieve a TextView from the inflated View, and update its text
+
+            Double weight = mDataList.get(position).getWeight();
+            Double bodyfatrate = mDataList.get(position).getBodyFatRate();
+            byte[] photo = mDataList.get(position).getPhoto();
+
+            StringBuilder sb = new StringBuilder();
+            txtWeight.setText(sb.append("Weight: ").append(weight).toString());
+            sb.setLength(0);
+            txtBodyFat.setText(sb.append("Body Fat Rate: ").append(bodyfatrate).toString());
+
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(photo, 0, photo.length);
+            imgView.setImageBitmap(decodedByte);
+        }
+
 
         // Return the View
         return view;

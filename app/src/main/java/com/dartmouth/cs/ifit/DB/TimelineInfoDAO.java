@@ -131,9 +131,15 @@ public class TimelineInfoDAO {
             entry.setGroudId(cursor.getLong(1));
             entry.setRemind(cursor.getInt(2));
             entry.setRemindText(cursor.getString(3));
-            entry.setPhoto(cursor.getBlob(4));
-            entry.setWeight(Double.parseDouble(cursor.getString(5)));
-            entry.setBodyFatRate(Double.parseDouble(cursor.getString(6)));
+            if (entry.getRemind().equals(1)){
+                entry.setPhoto(null);
+                entry.setWeight(0.0);
+                entry.setBodyFatRate(0.0);
+            } else {
+                entry.setPhoto(cursor.getBlob(4));
+                entry.setWeight(Double.parseDouble(cursor.getString(5)));
+                entry.setBodyFatRate(Double.parseDouble(cursor.getString(6)));
+            }
 
             // Calendar
             Calendar calendar= GregorianCalendar.getInstance();

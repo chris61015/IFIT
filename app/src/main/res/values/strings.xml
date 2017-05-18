@@ -4,6 +4,9 @@
 
     <string name="ui_timeline_button_add_photo">Record</string>
     <string name="ui_timeline_button_add_reminder">Reminder</string>
+    <string name="ui_timeline_button_delete">Delete</string>
+    <string name="ui_timeline_button_Modify">Modify</string>
+
 
         <string name="weight">Weight:    </string>
         <string name="body_fat_rate">Body fat rate:        </string>

@@ -28,7 +28,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.dartmouth.cs.ifit.ActivityEntriesAdapter;
+import com.dartmouth.cs.ifit.adaptor.ActivityEntriesAdapter;
 import com.dartmouth.cs.ifit.DB.CollectionInfoDAO;
 import com.dartmouth.cs.ifit.R;
 import com.dartmouth.cs.ifit.model.CollectionEntry;

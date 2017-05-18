@@ -1,4 +1,4 @@
-package com.dartmouth.cs.ifit;
+package com.dartmouth.cs.ifit.fragment;
 
 /**
  * Created by chris61015 on 5/16/17.
@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dartmouth.cs.ifit.R;
+import com.dartmouth.cs.ifit.adaptor.SamplePagerAdapter;
 import com.dartmouth.cs.ifit.model.TimelineEntry;
 import com.dartmouth.cs.ifit.view.SlidingTabLayout;
 
@@ -37,6 +39,7 @@ public class SlidingTabsBasicFragment extends Fragment {
     private ViewPager mViewPager;
     private SamplePagerAdapter mAdaptor;
     private List<TimelineEntry> mDataList = new ArrayList<TimelineEntry>();
+    private int pageSelected;
 
     /**
      * Inflates the {@link View} which will be displayed by this {@link Fragment}, from the app's
@@ -71,7 +74,16 @@ public class SlidingTabsBasicFragment extends Fragment {
         // its PagerAdapter set.
         mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
-        // END_INCLUDE (setup_slidingtablayout)
+
+        ViewPager.SimpleOnPageChangeListener pageChangeListener = new ViewPager.SimpleOnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                pageSelected = position;
+            }
+        };
+        mSlidingTabLayout.setOnPageChangeListener(pageChangeListener);
+        // END_INCLUDE (setup_slidingtablayout);
     }
     // END_INCLUDE (fragment_onviewcreated)
 
@@ -81,7 +93,10 @@ public class SlidingTabsBasicFragment extends Fragment {
         } else {
             mDataList.addAll(list);
         }
+    }
 
+    public int getPageSelected(){
+        return pageSelected;
     }
 }
 

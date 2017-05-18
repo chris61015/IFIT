@@ -68,7 +68,9 @@ public class TimelineEntry {
     }
 
     public void setPhoto(byte[] photo) {
-        this.photo = photo.clone();
+        if (photo!=null){
+            this.photo = photo.clone();
+        }
     }
 
     public Double getWeight() {
