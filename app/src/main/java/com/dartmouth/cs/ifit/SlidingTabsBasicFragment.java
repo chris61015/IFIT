@@ -14,10 +14,8 @@ import android.view.ViewGroup;
 import com.dartmouth.cs.ifit.model.TimelineEntry;
 import com.dartmouth.cs.ifit.view.SlidingTabLayout;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import static com.dartmouth.cs.ifit.common.Utility.mAdaptor;
-import static com.dartmouth.cs.ifit.common.Utility.mDataList;
 
 /**
  * A basic sample which shows how to use
@@ -37,8 +35,8 @@ public class SlidingTabsBasicFragment extends Fragment {
      * A {@link ViewPager} which will be used in conjunction with the {@link SlidingTabLayout} above.
      */
     private ViewPager mViewPager;
-
-
+    private SamplePagerAdapter mAdaptor;
+    private List<TimelineEntry> mDataList = new ArrayList<TimelineEntry>();
 
     /**
      * Inflates the {@link View} which will be displayed by this {@link Fragment}, from the app's
@@ -47,6 +45,7 @@ public class SlidingTabsBasicFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mAdaptor = new SamplePagerAdapter(getContext(),mDataList);
         return inflater.inflate(R.layout.fragment_sample, container, false);
     }
 
@@ -65,7 +64,6 @@ public class SlidingTabsBasicFragment extends Fragment {
         // BEGIN_INCLUDE (setup_viewpager)
         // Get the ViewPager and set its PagerAdapter so that it can display items
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        mAdaptor = new SamplePagerAdapter(getActivity());
         mViewPager.setAdapter(mAdaptor);
         // END_INCLUDE (setup_viewpager)
         // BEGIN_INCLUDE (setup_slidingtablayout)
@@ -77,12 +75,13 @@ public class SlidingTabsBasicFragment extends Fragment {
     }
     // END_INCLUDE (fragment_onviewcreated)
 
+    public void setData(List<TimelineEntry> list){
+        if (mAdaptor != null){
+            mAdaptor.addAll(list);
+        } else {
+            mDataList.addAll(list);
+        }
 
-    public static void setData(List<TimelineEntry> list) {
-        mDataList.clear();
-        mDataList.addAll(list);
-        if (mAdaptor != null)
-            mAdaptor.notifyDataSetChanged();
     }
 }
 

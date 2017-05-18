@@ -8,7 +8,6 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -29,8 +28,6 @@ import com.dartmouth.cs.ifit.notification.NotificationPublisher;
 
 import java.util.Calendar;
 
-import static com.dartmouth.cs.ifit.common.Utility.mDataList;
-
 /**
  * Created by chris61015 on 5/14/17.
  */
@@ -41,7 +38,8 @@ public class ShowTimelineActivity extends AppCompatActivity {
     public static final String GROUP_ID = "group_id";
 
     private TimelineInfoDAO datasource;
-    private SlidingTabsBasicFragment fragment = new SlidingTabsBasicFragment();
+    private SlidingTabsBasicFragment mFragment = new SlidingTabsBasicFragment();
+    private long G_ID;
 
     int mYear = -1, mMonth = -1, mDay = -1, mHour = -1, mMinute = -1;
     String remindText = null;
@@ -54,15 +52,11 @@ public class ShowTimelineActivity extends AppCompatActivity {
         //Fetch Data
         Intent intent = getIntent();
         final Long groupId = intent.getLongExtra(GROUP_ID,0L);
+        G_ID = groupId;
 
         //Get Data From DB
         datasource = new TimelineInfoDAO(this);
         datasource.open();
-
-//        AsyncTaskLoad loadFromDB = new AsyncTaskLoad();
-//        loadFromDB.execute(groupId);
-        mDataList.clear();
-        mDataList.addAll(datasource.fetchEntryByGroupId(groupId));;
 
         final Button recordButton = (Button) findViewById(R.id.btnAddPhoto);
         recordButton.setOnClickListener(new View.OnClickListener() {
@@ -73,7 +67,7 @@ public class ShowTimelineActivity extends AppCompatActivity {
                 bundle.putLong(ShowTimelineActivity.GROUP_ID, groupId);
                 intent.putExtras(bundle);
 
-                startActivity(intent);
+                startActivityForResult(intent, 1);
 //                // Perform action on click
 //                TimelineEntry entry = datasource.getEntryById(45);
 //                if (entry != null) {
@@ -100,22 +94,30 @@ public class ShowTimelineActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.sample_content_fragment, fragment);
+            transaction.replace(R.id.sample_content_fragment, mFragment);
             transaction.commit();
         }
-
+        mFragment.setData(datasource.fetchEntryByGroupId(G_ID));
     }
 
-    private class AsyncTaskLoad extends AsyncTask<Long, Void, Void>
-    {
-        @Override
-        protected Void doInBackground(Long... params)
-        {
-            mDataList.addAll(datasource.fetchEntryByGroupId(params[0]));
-            return null;
-        }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mFragment.setData(datasource.fetchEntryByGroupId(G_ID));
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.replace(R.id.sample_content_fragment, mFragment);
+//        transaction.commit();
     }
+
+//    private class AsyncTaskLoad extends AsyncTask<Long, Void, Void>
+//    {
+//        @Override
+//        protected Void doInBackground(Long... params)
+//        {
+//            mDataList.addAll(datasource.fetchEntryByGroupId(params[0]));
+//            return null;
+//        }
+//
+//    }
 
     private void datePicker(){
         // Get Current Date

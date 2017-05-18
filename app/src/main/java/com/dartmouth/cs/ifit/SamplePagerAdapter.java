@@ -4,16 +4,21 @@ package com.dartmouth.cs.ifit;
  * Created by chris61015 on 5/17/17.
  */
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.view.PagerAdapter;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import static com.dartmouth.cs.ifit.common.Utility.mDataList;
+import com.dartmouth.cs.ifit.model.TimelineEntry;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * The {@link android.support.v4.view.PagerAdapter} used to display pages in this sample.
@@ -21,11 +26,14 @@ import static com.dartmouth.cs.ifit.common.Utility.mDataList;
  * this class is the {@link #getPageTitle(int)} method which controls what is displayed in the
  */
 public class SamplePagerAdapter extends PagerAdapter {
-    private Activity act;
+    private Context mContext;
+    private List<TimelineEntry> mDataList = new ArrayList<>();
 
 
-    SamplePagerAdapter (Activity activity){
-        act = activity;
+    public SamplePagerAdapter (Context context, List<TimelineEntry> list){
+        super();
+        mContext = context;
+        mDataList = list;
     }
 
     /**
@@ -64,7 +72,8 @@ public class SamplePagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         // Inflate a new layout from our resources
-        View view = act.getLayoutInflater().inflate(R.layout.pager_item,
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View view = inflater.inflate(R.layout.pager_item,
                 container, false);
         // Add the newly created View to the ViewPager
         container.addView(view);
@@ -94,5 +103,21 @@ public class SamplePagerAdapter extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
 //            Log.i(LOG_TAG, "destroyItem() [position: " + position + "]");
+    }
+
+    @Override
+    public int getItemPosition(Object object){
+        return PagerAdapter.POSITION_NONE;
+    }
+
+    public void addData(TimelineEntry entry) {
+        mDataList.add(entry);
+//        notifyDataSetChanged();
+    }
+
+    public void addAll(List<TimelineEntry> lst) {
+        mDataList.clear();
+        mDataList.addAll(lst);
+        notifyDataSetChanged();
     }
 }
