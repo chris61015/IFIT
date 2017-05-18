@@ -20,39 +20,6 @@
     android:layout_height="match_parent"
     android:id="@+id/sample_main_layout">
 
-    <ViewAnimator
-        android:id="@+id/sample_output"
-        android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_weight="1">
-
-        <ScrollView
-            style="@style/Widget.SampleMessageTile"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:contentDescription="@string/ui_proile_image_descripton"
-                android:id="@+id/ImageProfile"
-                android:layout_width="0dp"
-                android:layout_height="200dp"
-                android:layout_weight="1"
-                android:layout_margin="5dp"
-                android:layout_marginBottom="5dp"
-                android:focusable="true"
-                android:focusableInTouchMode="true" >
-
-                <requestFocus />
-            </ImageView>
-        </ScrollView>
-
-    </ViewAnimator>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
-
     <FrameLayout
         android:id="@+id/sample_content_fragment"
         android:layout_weight="2"

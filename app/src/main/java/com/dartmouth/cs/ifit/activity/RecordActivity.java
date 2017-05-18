@@ -29,6 +29,8 @@ import java.io.File;
 import java.util.GregorianCalendar;
 
 import static com.dartmouth.cs.ifit.R.id.imageView;
+import static com.dartmouth.cs.ifit.common.Utility.mAdaptor;
+import static com.dartmouth.cs.ifit.common.Utility.mDataList;
 
 
 public class RecordActivity extends Activity {
@@ -134,6 +136,8 @@ public class RecordActivity extends Activity {
             datasource.updateEntry(entry);
         } else {
             datasource.insertEntry(entry);
+            mDataList.add(entry);
+            mAdaptor.notifyDataSetChanged();
         }
     }
 

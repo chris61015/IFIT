@@ -27,21 +27,21 @@ import com.dartmouth.cs.ifit.SlidingTabsBasicFragment;
 import com.dartmouth.cs.ifit.model.TimelineEntry;
 import com.dartmouth.cs.ifit.notification.NotificationPublisher;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+
+import static com.dartmouth.cs.ifit.common.Utility.mDataList;
 
 /**
  * Created by chris61015 on 5/14/17.
  */
 
 public class ShowTimelineActivity extends AppCompatActivity {
-    private static List<TimelineEntry> mDataList = new ArrayList<>();
 
     public static String TIMELINE_ID = "timeline_id";
     public static final String GROUP_ID = "group_id";
 
     private TimelineInfoDAO datasource;
+    private SlidingTabsBasicFragment fragment = new SlidingTabsBasicFragment();
 
     int mYear = -1, mMonth = -1, mDay = -1, mHour = -1, mMinute = -1;
     String remindText = null;
@@ -59,8 +59,10 @@ public class ShowTimelineActivity extends AppCompatActivity {
         datasource = new TimelineInfoDAO(this);
         datasource.open();
 
-        AsyncTaskLoad loadFromDB = new AsyncTaskLoad();
-        loadFromDB.execute(groupId);
+//        AsyncTaskLoad loadFromDB = new AsyncTaskLoad();
+//        loadFromDB.execute(groupId);
+        mDataList.clear();
+        mDataList.addAll(datasource.fetchEntryByGroupId(groupId));;
 
         final Button recordButton = (Button) findViewById(R.id.btnAddPhoto);
         recordButton.setOnClickListener(new View.OnClickListener() {
@@ -98,11 +100,8 @@ public class ShowTimelineActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            SlidingTabsBasicFragment fragment = new SlidingTabsBasicFragment();
             transaction.replace(R.id.sample_content_fragment, fragment);
             transaction.commit();
-
-            fragment.setData(mDataList);
         }
 
     }
