@@ -236,6 +236,12 @@ public class ShowTimelineActivity extends AppCompatActivity {
                                             entry.setGroudId(G_ID);
                                             datasource.insertEntry(entry);
                                             scheduleNotification(entry);
+
+
+                                            Intent intent = getIntent();
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                            finish();
+                                            startActivity(intent);
                                         }
                                     }
                                 })
