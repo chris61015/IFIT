@@ -104,6 +104,14 @@ public class RecordActivity extends Activity {
             @Override
             public void onClick(View v) {
                 saveProfile();
+
+                Intent intent = new Intent(getApplicationContext(), ShowTimelineActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putLong(ShowTimelineActivity.GROUP_ID, entry.getGroudId());
+                intent.putExtras(bundle);
+
+                startActivity(intent);
+
                 Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -215,6 +223,20 @@ public class RecordActivity extends Activity {
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putParcelable(MainActivity.URI_CROPPED_KEY, mCroppedImageUri);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), ShowTimelineActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putLong(ShowTimelineActivity.GROUP_ID, entry.getGroudId());
+        intent.putExtras(bundle);
+
+        startActivity(intent);
+
+        Toast.makeText(getApplicationContext(), "Record is not saved", Toast.LENGTH_SHORT).show();
+        finish();
+        return;
     }
 
 

@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -77,6 +78,7 @@ public class ShowTimelineActivity extends AppCompatActivity {
 //                    cancelNotification(entry);
 //                    datasource.removeEntry(entry.getId());
 //                }
+                finish();
             }
         });
 
@@ -106,6 +108,13 @@ public class ShowTimelineActivity extends AppCompatActivity {
                     mList.clear();
                     mList.addAll(datasource.fetchEntryByGroupId(G_ID));
                     mFragment.setData(mList);
+                    if (entry.getRemind() == 1)
+                        cancelNotification(entry);
+
+                    Intent intent = getIntent();
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    finish();
+                    startActivity(intent);
                 }
                 else
                     Toast.makeText(getApplicationContext(), "No record selected", Toast.LENGTH_SHORT).show();
