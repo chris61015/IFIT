@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.dartmouth.cs.ifit.DB.TimelineInfoDAO;
 import com.dartmouth.cs.ifit.R;
@@ -98,12 +99,16 @@ public class ShowTimelineActivity extends AppCompatActivity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                int pagePos = mFragment.getPageSelected();
-                TimelineEntry entry = mList.get(pagePos);
-                datasource.removeEntry(entry.getId());
-                mList.clear();
-                mList.addAll(datasource.fetchEntryByGroupId(G_ID));
-                mFragment.setData(mList);
+                if (mList.size() > 0) {
+                    int pagePos = mFragment.getPageSelected();
+                    TimelineEntry entry = mList.get(pagePos);
+                    datasource.removeEntry(entry.getId());
+                    mList.clear();
+                    mList.addAll(datasource.fetchEntryByGroupId(G_ID));
+                    mFragment.setData(mList);
+                }
+                else
+                    Toast.makeText(getApplicationContext(), "No record selected", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -112,16 +117,26 @@ public class ShowTimelineActivity extends AppCompatActivity {
         modifyButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                int pagePos = mFragment.getPageSelected();
-                TimelineEntry entry = mList.get(pagePos);
+                if (mList.size() > 0) {
+                    int pagePos = mFragment.getPageSelected();
+                    TimelineEntry entry = mList.get(pagePos);
 
-                Intent intent = new Intent(getApplicationContext(), RecordActivity.class);
+                    if (entry.getRemind() == 1) {
+                        Toast.makeText(getApplicationContext(), "We cannot modify reminders", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                Bundle bundle = new Bundle();
-                bundle.putLong(ShowTimelineActivity.TIMELINE_ID, entry.getId());
-                intent.putExtras(bundle);
+                    Intent intent = new Intent(getApplicationContext(), RecordActivity.class);
 
-                startActivityForResult(intent, 1);
+                    Bundle bundle = new Bundle();
+                    bundle.putLong(ShowTimelineActivity.TIMELINE_ID, entry.getId());
+                    intent.putExtras(bundle);
+
+                    startActivityForResult(intent, 1);
+                }
+
+                else
+                    Toast.makeText(getApplicationContext(), "No record selected", Toast.LENGTH_SHORT).show();
             }
         });
 
