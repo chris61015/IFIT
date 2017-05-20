@@ -2,11 +2,22 @@ package com.dartmouth.cs.ifit.DB;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.dartmouth.cs.ifit.model.TimelineEntry;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -30,8 +41,11 @@ public class TimelineInfoDAO {
             DBHelper.KEY_DATE_TIME
     };
 
+    Context context;
+
     public TimelineInfoDAO(Context context) {
         dbHelper = new DBHelper(context);
+        this.context = context;
     }
 
     public void open() {
@@ -55,7 +69,7 @@ public class TimelineInfoDAO {
         values.put(DBHelper.KEY_GROUP_ID, entry.getGroudId());
         values.put(DBHelper.KEY_IS_REMIND, entry.getRemind());
         values.put(DBHelper.KEY_REMIND_TEXT, entry.getRemindText());
-        values.put(DBHelper.KEY_PHOTO, entry.getPhoto());
+        values.put(DBHelper.KEY_PHOTO, saveToInternalStorage(entry));
         values.put(DBHelper.KEY_WEIGHT, entry.getWeight() + "");
         values.put(DBHelper.KEY_BODY_FAT_RATE, entry.getBodyFatRate() + "");
         values.put(DBHelper.KEY_DATE_TIME, entry.getDateTime().getTimeInMillis());
@@ -74,7 +88,7 @@ public class TimelineInfoDAO {
         values.put(DBHelper.KEY_GROUP_ID, entry.getGroudId());
         values.put(DBHelper.KEY_IS_REMIND, entry.getRemind());
         values.put(DBHelper.KEY_REMIND_TEXT, entry.getRemindText());
-        values.put(DBHelper.KEY_PHOTO, entry.getPhoto());
+        values.put(DBHelper.KEY_PHOTO, saveToInternalStorage(entry));
         values.put(DBHelper.KEY_WEIGHT, entry.getWeight() + "");
         values.put(DBHelper.KEY_BODY_FAT_RATE, entry.getBodyFatRate() + "");
         values.put(DBHelper.KEY_DATE_TIME, entry.getDateTime().getTimeInMillis());
@@ -99,7 +113,7 @@ public class TimelineInfoDAO {
             entry.setGroudId(cursor.getLong(1));
             entry.setRemind(cursor.getInt(2));
             entry.setRemindText(cursor.getString(3));
-            entry.setPhoto(cursor.getBlob(4));
+            loadImageFromStorage(entry, cursor.getString(4));
             entry.setWeight(Double.parseDouble(cursor.getString(5)));
             entry.setBodyFatRate(Double.parseDouble(cursor.getString(6)));
 
@@ -136,7 +150,7 @@ public class TimelineInfoDAO {
                 entry.setWeight(0.0);
                 entry.setBodyFatRate(0.0);
             } else {
-                entry.setPhoto(cursor.getBlob(4));
+                loadImageFromStorage(entry, cursor.getString(4));
                 entry.setWeight(Double.parseDouble(cursor.getString(5)));
                 entry.setBodyFatRate(Double.parseDouble(cursor.getString(6)));
             }
@@ -168,7 +182,7 @@ public class TimelineInfoDAO {
             entry.setGroudId(cursor.getLong(1));
             entry.setRemind(cursor.getInt(2));
             entry.setRemindText(cursor.getString(3));
-            entry.setPhoto(cursor.getBlob(4));
+            loadImageFromStorage(entry, cursor.getString(4));
             entry.setWeight(Double.parseDouble(cursor.getString(5)));
             entry.setBodyFatRate(Double.parseDouble(cursor.getString(6)));
 
@@ -184,5 +198,53 @@ public class TimelineInfoDAO {
         cursor.close();
         close();
         return entries;
+    }
+
+    private String saveToInternalStorage(TimelineEntry entry){
+        ContextWrapper cw = new ContextWrapper(context);
+        // path to /data/data/yourapp/app_data/imageDir
+
+        if (entry.getPath().length() > 0) {
+            File file = new File(entry.getPath());
+            if (file.exists())
+                file.delete();
+        }
+
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath = new File(directory, String.valueOf(System.currentTimeMillis()) + ".jpg");
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            fos.write(entry.getPhoto());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        entry.setPath(mypath.getAbsolutePath());
+        return mypath.getAbsolutePath();
+    }
+
+    private void loadImageFromStorage(TimelineEntry entry, String path) {
+        try {
+            entry.setPath(path);
+            RandomAccessFile f = new RandomAccessFile(path, "r");
+            byte[] b = new byte[(int)f.length()];
+            f.readFully(b);
+            entry.setPhoto(b);
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -54,7 +54,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + KEY_REMIND_TEXT
             + " TEXT, "
             + KEY_PHOTO
-            + " BLOB, "
+            + " TEXT, "
             + KEY_WEIGHT
             + " TEXT, "
             + KEY_BODY_FAT_RATE

@@ -9,6 +9,16 @@ public class CollectionEntry {
     private String collectionName;
     private byte[] icon;
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    private String path = "";
+
     public byte[] getIcon() {
         return icon;
     }

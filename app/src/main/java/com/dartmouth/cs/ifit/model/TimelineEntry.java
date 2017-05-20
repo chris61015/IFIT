@@ -17,6 +17,16 @@ public class TimelineEntry {
     private double bodyFatRate;
     private Calendar dateTime;
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    private String path = "";
+
     public TimelineEntry() {
         id = -1;
         groupId = -1;

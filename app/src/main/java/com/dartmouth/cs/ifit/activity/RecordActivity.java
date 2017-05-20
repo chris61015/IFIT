@@ -103,6 +103,7 @@ public class RecordActivity extends Activity {
         mBSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 saveProfile();
 
                 Intent intent = new Intent(getApplicationContext(), ShowTimelineActivity.class);
@@ -120,6 +121,13 @@ public class RecordActivity extends Activity {
         mBCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Intent intent = new Intent(getApplicationContext(), ShowTimelineActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putLong(ShowTimelineActivity.GROUP_ID, entry.getGroudId());
+                intent.putExtras(bundle);
+
+                startActivity(intent);
                 finish();
             }
         });
@@ -214,10 +222,9 @@ public class RecordActivity extends Activity {
 
         Bitmap bitmap = ((BitmapDrawable)mIVimage.getDrawable()).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 
-        entry.setPhoto(byteArray);
+        entry.setPhoto(stream.toByteArray());
     }
 
     protected void onSaveInstanceState(Bundle savedInstanceState) {
